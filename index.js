@@ -2,45 +2,36 @@
 const express = require('express');
 const path = require('path');
 const app = express();
+const jwt = require('jsonwebtoken');
+const apiRoutes = require('./routes/apiRoutes');
 const port = 3000;
 
-app.use(express.json());
-// Serve static files from the frontend directory
-app.use(express.static(path.join(__dirname, '../todolist')));
 
-// Example API endpoint
-const apiRoutes = require('./api/api');
+// Middleware to verify JWT token
+function verifyToken(req, res, next) {
+  const token = req.headers['authorization'];
+
+  if (!token) {
+    return res.status(403).json({ error: 'Token not provided' });
+  }
+
+  jwt.verify(token, 'your_secret_key', (err, decoded) => {
+    if (err) {
+      console.error('Error verifying token:', err);
+      return res.status(401).json({ error: 'Failed to authenticate token' });
+    }
+    req.user = decoded;
+    next();
+  });
+}
+
+
+// Middleware usage
+app.use(express.json()); // Parse JSON bodies
+app.use(verifyToken); // Apply JWT token verification middleware
 app.use('/api', apiRoutes);
 
 // Start the server
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
-
-// const express = require('express');
-// const https = require('https');
-// const fs = require('fs');
-// const path = require('path');
-// const app = express();
-// const port = 3000;
-
-// // Read SSL certificate
-// const options = {
-//   key: fs.readFileSync('path/to/your/private.key'),
-//   cert: fs.readFileSync('path/to/your/certificate.crt')
-// };
-
-// // Middleware to parse JSON
-// app.use(express.json());
-
-// // Serve static files from the frontend directory
-// app.use(express.static(path.join(__dirname, '../frontend')));
-
-// // Import and use API routes
-// const apiRoutes = require('./api/api');
-// app.use('/api', apiRoutes);
-
-// // Start the HTTPS server
-// https.createServer(options, app).listen(port, () => {
-//   console.log(`HTTPS Server is running on https://localhost:${port}`);
-// });

@@ -1,0 +1,32 @@
+const users = require('../models/Users');
+
+async function rgstUsers(req, res) {
+  try {
+
+    // Fetch users (example)
+    const users = await users.rgstUsers(req);
+    res.json(users);
+  } catch (err) {
+    console.error('Error fetching users:', err);
+    res.status(500).json({ error: 'Error fetching users' });
+  }
+}
+
+async function signInUsers(req, res) {
+  try {
+    // Access decoded user info from JWT token
+    console.log('Authenticated user:', req.user);
+
+    // Fetch users (example)
+    const users = await Users.getUsers();
+    res.json(users);
+  } catch (err) {
+    console.error('Error fetching users:', err);
+    res.status(500).json({ error: 'Error fetching users' });
+  }
+}
+
+module.exports = {
+  rgstUsers,
+  // Add more controller functions as needed
+};
