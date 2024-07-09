@@ -3,7 +3,7 @@ const Users = require('../models/UsersModel');
 async function rgstUsers(req, res) {
   try {
     // Fetch users (example)
-    const users = await Users.rgstUsers(req);
+    const users = await Users.rgstUsers(req, res);
     res.json(users);
   } catch (err) {
     console.error('Error fetching users:', err);
