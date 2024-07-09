@@ -1,10 +1,9 @@
-const users = require('../models/Users');
+const Users = require('../models/UsersModel');
 
 async function rgstUsers(req, res) {
   try {
-
     // Fetch users (example)
-    const users = await users.rgstUsers(req);
+    const users = await Users.rgstUsers(req);
     res.json(users);
   } catch (err) {
     console.error('Error fetching users:', err);
@@ -18,7 +17,7 @@ async function signInUsers(req, res) {
     console.log('Authenticated user:', req.user);
 
     // Fetch users (example)
-    const users = await Users.getUsers();
+    const users = await Users.signInUsers();
     res.json(users);
   } catch (err) {
     console.error('Error fetching users:', err);
@@ -27,6 +26,6 @@ async function signInUsers(req, res) {
 }
 
 module.exports = {
-  rgstUsers,
+  rgstUsers,signInUsers
   // Add more controller functions as needed
 };

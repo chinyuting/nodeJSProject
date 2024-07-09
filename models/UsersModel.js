@@ -1,18 +1,19 @@
 const pool = require('../config/postgresqlConfig');
 
 async function rgstUsers(req) {
-  const connection = await pool.connect();
-  try {
-    const email = "test1@email.com";
-    const password = "333"
-    const nickName = "testUser1"
-    const result = await connection.query(`INSERT INTO Users (email, password, nickName) 
-    VALUES (${email}, ${password}, ${nickName})`);
+  console.log(req);
+  // const connection = await pool.connect();
+  // try {
+  //   const email = "test1@email.com";
+  //   const password = "333"
+  //   const nickName = "testUser1"
+  //   const result = await connection.query(`INSERT INTO Users (email, password, nickName) 
+  //   VALUES (${email}, ${password}, ${nickName})`);
 
-    return result.rows;
-  } finally {
-    connection.release();
-  }
+  //   return result.rows;
+  // } finally {
+  //   connection.release();
+  // }
 }
 
 async function signInUsers() {

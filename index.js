@@ -28,7 +28,7 @@ function verifyToken(req, res, next) {
 
 // Middleware usage
 app.use(express.json()); // Parse JSON bodies
-app.use(verifyToken); // Apply JWT token verification middleware
+// app.use(verifyToken); // Apply JWT token verification middleware
 app.use('/api', apiRoutes);
 
 // Start the server
