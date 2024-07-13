@@ -14,20 +14,20 @@ async function rgstUsers(req, res) {
   }
 }
 
-async function signInUsers() {
-    const client = await pool.connect();
-    try {
-        const email = "test1@email.com";
-        const password = "333"
-        const result = await client.query(`SELECT * FROM users WHERE email = ${email} and password = ${password}`);
-        
-        
-        
-        return result.rows;
-    } finally {
-      client.release();
-    }
+async function signInUsers(email, password) {
+  const client = await pool.connect();
+  try {
+      const result = await client.query(`SELECT * FROM users WHERE email = $1 and password = $2` ,
+      [email, password]);
+      if (result.rows.length > 0) {
+        return result.rows[0];
+      } else {
+          return null;
+      }
+  } finally {
+    client.release();
   }
+}
 
 module.exports = {
     rgstUsers,
