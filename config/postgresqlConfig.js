@@ -1,5 +1,6 @@
 const { Pool } = require('pg');
 
+// database 資料
 const dbPool = new Pool({
   user: 'chiupostgres',
   host: 'localhost',

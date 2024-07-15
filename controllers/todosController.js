@@ -1,10 +1,14 @@
 const Todos = require('../models/TodosModel');
 
+/* 
+  取得todos 引用TodosModel.getTodos
+  @param request and response
+*/
 async function getTodos(req, res) {
-  const { userid } = req.params;
+  const { id } = req.user;
   try {
     // Fetch users (example)
-    const todos = await Todos.getTodos(userid);
+    const todos = await Todos.getTodos({ id });
     res.json(todos);
   } catch (err) {
     console.error('Error fetching todos:', err);
@@ -12,10 +16,16 @@ async function getTodos(req, res) {
   }
 }
 
+/* 
+  新增todos 引用TodosModel.addTodo
+  @param request and response
+*/
 async function addTodo(req, res) {
+  const { content, completed_at } = req.body;
+  const { id } = req.user;
   try {
     // Fetch users (example)
-    const todos = await Todos.addTodo(req, res);
+    const todos = await Todos.addTodo({ content, completed_at, id });
     res.json(todos);
   } catch (err) {
     console.error('Error fetching todos:', err);
@@ -23,11 +33,16 @@ async function addTodo(req, res) {
   }
 }
 
+/* 
+  toggle todo 完成狀態 引用TodosModel.toggleTodoAsCompleted
+  @param request and response
+*/
 async function toggleTodoAsCompleted(req, res) {
-  const { todoid } = req.params;
+  const { todoId } = req.params;
+  const { id } = req.user;
   try {
     // Fetch users (example)
-    const todos = await Todos.toggleTodoAsCompleted(todoid);
+    const todos = await Todos.toggleTodoAsCompleted({ todoId, id });
     res.json(todos);
   } catch (err) {
     console.error('Error fetching todos:', err);
@@ -35,26 +50,37 @@ async function toggleTodoAsCompleted(req, res) {
   }
 }
 
+/* 
+  修改todo content 引用TodosModel.editTodoContent
+  @param request and response
+*/
 async function editTodoContent(req, res) {
-  const { todoid } = req.params;
+  const { todoId } = req.params;
   const { content } = req.body;
+  const { id } = req.user;
+  if (!content) {
+    return res.status(400).json({ error: 'Content cannot be null!' });
+  }
   try {
     // Fetch users (example)
-    if (!content) {
-      return res.status(400).json({ error: 'Content cannot be null!' });
-    }
-    const todos = await Todos.editTodoContent(todoid, content);
+    const todos = await Todos.editTodoContent({ todoId, content, id });
     res.json(todos);
   } catch (err) {
     console.error('Error fetching todos:', err);
     res.status(500).json({ error: 'Error fetching todos' });
   }
 }
+
+/* 
+  移除todo 引用TodosModel.removeTodo
+  @param request and response
+*/
 async function removeTodo(req, res) {
-  const { todoid } = req.params;
+  const { todoId } = req.params;
+  const { id } = req.user;
   try {
     // Fetch users (example)
-    const todos = await Todos.removeTodo(todoid);
+    const todos = await Todos.removeTodo({ todoId, id });
     res.json(todos);
   } catch (err) {
     console.error('Error fetching todos:', err);

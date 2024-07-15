@@ -1,28 +1,39 @@
 const pool = require('../config/postgresqlConfig');
+const cryptoJS = require("crypto-js");
 
-async function rgstUsers(req, res) {
-  const { email, password, nickname } = req.body;  
-
+/* 
+  使用者註冊
+  @param request and response
+*/
+async function rgstUsers(userData) {
+  const { email, password, nickname } = userData;
   const connection = await pool.connect();
   try {
-    console.log(connection);
-    const result = await connection.query('INSERT INTO users (email, password, nickname) VALUES ($1, $2, $3) RETURNING *',[email, password, nickname]);
-    
+    // password雜湊(SHA256)
+    const result = await connection.query('INSERT INTO users (email, password, nickname) VALUES ($1, $2, $3) RETURNING *',[email, cryptoJS.SHA256(password).toString(cryptoJS.enc.Hex), nickname]);
     return result.rows[0];
   } finally {
     connection.release();
   }
 }
 
-async function signInUsers(email, password) {
+/* 
+  使用者登入
+  @param request and response
+*/
+async function signInUsers(userData) {
+  const { email, password } = userData;
   const client = await pool.connect();
   try {
+      // password雜湊(SHA256)
       const result = await client.query(`SELECT * FROM users WHERE email = $1 and password = $2` ,
-      [email, password]);
-      if (result.rows.length > 0) {
-        return result.rows[0];
+      [email, cryptoJS.SHA256(password).toString(cryptoJS.enc.Hex)]);
+      const rowData = result.rows;
+      if (rowData.length > 0) {
+        // res.body.json({message:`Login success, welcome ${rowData[0].nickname}!`})
+        return rowData[0];
       } else {
-          return null;
+        return null;
       }
   } finally {
     client.release();
