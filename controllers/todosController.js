@@ -2,14 +2,15 @@ const Todos = require('../models/TodosModel');
 
 /* 
   取得todos 引用TodosModel.getTodos
-  @param request and response
+  @param {Object} request
+         {Object} response
 */
 async function getTodos(req, res) {
+  // 取得Bearer token的id
   const { id } = req.user;
   try {
-    // Fetch users (example)
     const todos = await Todos.getTodos({ id });
-    res.json(todos);
+    res.status(200).json(todos);
   } catch (err) {
     console.error('Error fetching todos:', err);
     res.status(500).json({ error: 'Error fetching todos' });
@@ -18,15 +19,23 @@ async function getTodos(req, res) {
 
 /* 
   新增todos 引用TodosModel.addTodo
-  @param request and response
+  @param {Object} request
+         {Object} response
 */
 async function addTodo(req, res) {
   const { content, completed_at } = req.body;
+  // 取得Bearer token的id
   const { id } = req.user;
   try {
-    // Fetch users (example)
     const todos = await Todos.addTodo({ content, completed_at, id });
-    res.json(todos);
+    // res.json(todos);
+    res.status(200).json({
+      todos: {
+        id: todos.id,
+        content: todos.content,
+      },
+      message: `新增成功`
+    });
   } catch (err) {
     console.error('Error fetching todos:', err);
     res.status(500).json({ error: 'Error fetching todos' });
@@ -35,15 +44,25 @@ async function addTodo(req, res) {
 
 /* 
   toggle todo 完成狀態 引用TodosModel.toggleTodoAsCompleted
-  @param request and response
+  @param {Object} request
+         {Object} response
 */
 async function toggleTodoAsCompleted(req, res) {
+  // 取得參數todoId
   const { todoId } = req.params;
+  // 取得Bearer token的id
   const { id } = req.user;
   try {
-    // Fetch users (example)
     const todos = await Todos.toggleTodoAsCompleted({ todoId, id });
-    res.json(todos);
+    res.status(200).json({
+      todos: {
+        id: todos.id,
+        content: todos.content,
+        completed_at: todos.completed_at,
+      },
+      message: `成功更改狀態`
+    });
+    
   } catch (err) {
     console.error('Error fetching todos:', err);
     res.status(500).json({ error: 'Error fetching todos' });
@@ -52,19 +71,27 @@ async function toggleTodoAsCompleted(req, res) {
 
 /* 
   修改todo content 引用TodosModel.editTodoContent
-  @param request and response
+  @param {Object} request
+         {Object} response
 */
 async function editTodoContent(req, res) {
+  // 取得參數todoId
   const { todoId } = req.params;
-  const { content } = req.body;
+  // 取得Bearer token的id
   const { id } = req.user;
+  const { content } = req.body;
   if (!content) {
     return res.status(400).json({ error: 'Content cannot be null!' });
   }
   try {
-    // Fetch users (example)
     const todos = await Todos.editTodoContent({ todoId, content, id });
-    res.json(todos);
+    res.status(200).json({
+      todos: {
+        id: todos.id,
+        content: todos.content,
+      },
+      message: `修改成功`
+    });
   } catch (err) {
     console.error('Error fetching todos:', err);
     res.status(500).json({ error: 'Error fetching todos' });
@@ -73,15 +100,22 @@ async function editTodoContent(req, res) {
 
 /* 
   移除todo 引用TodosModel.removeTodo
-  @param request and response
+  @param {Object} request
+         {Object} response
 */
 async function removeTodo(req, res) {
+  // 取得參數todoId
   const { todoId } = req.params;
   const { id } = req.user;
   try {
-    // Fetch users (example)
     const todos = await Todos.removeTodo({ todoId, id });
-    res.json(todos);
+    res.status(200).json({
+      todos: {
+        id: todos.id,
+        content: todos.content,
+      },
+      message: `刪除成功`
+    });
   } catch (err) {
     console.error('Error fetching todos:', err);
     res.status(500).json({ error: 'Error fetching todos' });
@@ -90,5 +124,4 @@ async function removeTodo(req, res) {
 
 module.exports = {
   getTodos,addTodo,toggleTodoAsCompleted,editTodoContent,removeTodo
-  // Add more controller functions as needed
 };

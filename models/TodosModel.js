@@ -1,8 +1,8 @@
 const pool = require('../config/postgresqlConfig');
 
 /* 
-  取得使用者todo
-  @param request and response
+  使用者註冊
+  @param {Object} {id} - userid
 */
 async function getTodos({ id }) {
   const connection = await pool.connect();
@@ -17,7 +17,7 @@ async function getTodos({ id }) {
 
 /* 
   新增todo
-  @param request and response
+  @param {Object} { content, completed_at, id } - todo的content, todo的completed_at, userid
 */
 async function addTodo({ content, completed_at, id }) {
   const connection = await pool.connect();
@@ -33,7 +33,7 @@ async function addTodo({ content, completed_at, id }) {
 
 /* 
   toggle todo 完成狀態(完成紀錄時間 未完成為null)
-  @param request and response
+  @param {Object} { todoId, id } - todo的id, userid
 */
 async function toggleTodoAsCompleted({ todoId, id }) {
   const connection = await pool.connect();
@@ -56,7 +56,7 @@ async function toggleTodoAsCompleted({ todoId, id }) {
 
 /* 
   修改todo content
-  @param request and response
+  @param {Object} { todoId, content, id } - todo的id, todo的content, userid
 */
 async function editTodoContent({ todoId, content, id }) {
   const connection = await pool.connect();
@@ -70,9 +70,10 @@ async function editTodoContent({ todoId, content, id }) {
     connection.release();
   }
 }
+
 /* 
   移除todo
-  @param request and response
+  @param {Object} { todoId, id } - todo的id, userid
 */
 async function removeTodo({ todoId, id }) {
   const connection = await pool.connect();
@@ -93,6 +94,4 @@ module.exports = {
   toggleTodoAsCompleted,
   editTodoContent,
   removeTodo
-
-  // Add more model methods as needed
 };

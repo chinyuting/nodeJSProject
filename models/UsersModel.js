@@ -2,8 +2,23 @@ const pool = require('../config/postgresqlConfig');
 const cryptoJS = require("crypto-js");
 
 /* 
+  email是否重複使用
+  @param {Object} userData - email, password, nickname
+*/
+async function findUserByEmail(email) {
+  const connection = await pool.connect();
+  try {
+    const result = await connection.query('SELECT * FROM users WHERE email = $1', [email]);
+    console.log('result', result);
+    return result.rows[0];
+  } finally {
+    connection.release();
+  }
+}
+
+/* 
   使用者註冊
-  @param request and response
+  @param {Object} userData - email, password, nickname
 */
 async function rgstUsers(userData) {
   const { email, password, nickname } = userData;
@@ -19,29 +34,37 @@ async function rgstUsers(userData) {
 
 /* 
   使用者登入
-  @param request and response
+  @param {Object} userData - email, password
 */
 async function signInUsers(userData) {
   const { email, password } = userData;
-  const client = await pool.connect();
+  const connection = await pool.connect();
   try {
       // password雜湊(SHA256)
-      const result = await client.query(`SELECT * FROM users WHERE email = $1 and password = $2` ,
+      const result = await connection.query(`SELECT * FROM users WHERE email = $1 and password = $2` ,
       [email, cryptoJS.SHA256(password).toString(cryptoJS.enc.Hex)]);
       const rowData = result.rows;
       if (rowData.length > 0) {
-        // res.body.json({message:`Login success, welcome ${rowData[0].nickname}!`})
         return rowData[0];
       } else {
         return null;
       }
   } finally {
-    client.release();
+    connection.release();
   }
 }
+
+// async function signOutUsers(userData) {
+//   const connection = await pool.connect();
+//   try {
+      
+//   } finally {
+//     connection.release();
+//   }
+// }
 
 module.exports = {
     rgstUsers,
     signInUsers,
-  // Add more model methods as needed
+    findUserByEmail,
 };

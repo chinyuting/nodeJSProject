@@ -7,6 +7,10 @@ const dbPool = new Pool({
   database: 'todos_database',
   password: 'chiupostgres',
   port: 5432, // Default PostgreSQL port
+  max: 5,
+  min: 0,
+  connectionTimeoutMillis: 30000,
+  idleTimeoutMillis: 10000
 });
 
 module.exports = dbPool;
