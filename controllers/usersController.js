@@ -3,15 +3,15 @@ const Users = require('../models/UsersModel');
 const secretKey = process.env.JWT_SECRET_KEY;
 
 /* 
-  使用者註冊 引用UsersModel.rgstUsers
+  使用者註冊 引用UsersModel.registerUsers
   @param {Object} request
          {Object} response
 */
-async function rgstUsers(req, res) {
+async function registerUsers(req, res) {
   console.log(req.body);
   const { email, password, nickname } = req.body.user;
   try {
-    const users = await Users.rgstUsers({ email, password, nickname });
+    const users = await Users.registerUsers({ email, password, nickname });
     // res.json(users);
     res.status(200).json({
       user: {
@@ -62,5 +62,5 @@ async function signInUsers(req, res) {
 }
 
 module.exports = {
-  rgstUsers,signInUsers
+  registerUsers, signInUsers
 };

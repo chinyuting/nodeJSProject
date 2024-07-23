@@ -7,17 +7,19 @@ const authenticateJWT = (req, res, next) => {
   if (authHeader) {
     // Bearer取出token
     const token = authHeader.split(' ')[1];
+    // 驗證Bearer是否有效
     jwt.verify(token, `${secretKey}`, (err, user) => {
       if (err) {
-          // return res.sendStatus(403);
-          return res.status(403).json({ errors: [{ msg: '未授權', param: 'token', location: 'header' }] });
+        return res.status(403).json({ errors: [{ msg: '未正確授權', param: 'token' }] });
       }
       req.user = user;
       next();
     });
   } else {
-    res.sendStatus(401);
+    return res.status(403).json({ errors: [{ msg: '未正確授權', param: 'token' }] });
   }
 };
 
-module.exports = authenticateJWT;
+module.exports = {
+  authenticateJWT
+};

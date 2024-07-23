@@ -88,10 +88,26 @@ async function removeTodo({ todoId, id }) {
   }
 }
 
+/* 
+  todo id是否存在
+  @param {String} id - todo id
+*/
+async function findTodosByID( id ) {
+  const connection = await pool.connect();
+  try {
+    const result = await connection.query('SELECT * FROM todos WHERE id = $1', [id]);
+    // console.log('result', result);
+    return result.rows[0];
+  } finally {
+    connection.release();
+  }
+}
+
 module.exports = {
   getTodos,
   addTodo,
   toggleTodoAsCompleted,
   editTodoContent,
-  removeTodo
+  removeTodo,
+  findTodosByID
 };

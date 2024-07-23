@@ -3,7 +3,7 @@ const cryptoJS = require("crypto-js");
 
 /* 
   email是否重複使用
-  @param {Object} userData - email, password, nickname
+  @param {String} email - user email由registerUsersValidator傳入
 */
 async function findUserByEmail(email) {
   const connection = await pool.connect();
@@ -20,7 +20,7 @@ async function findUserByEmail(email) {
   使用者註冊
   @param {Object} userData - email, password, nickname
 */
-async function rgstUsers(userData) {
+async function registerUsers(userData) {
   const { email, password, nickname } = userData;
   const connection = await pool.connect();
   try {
@@ -64,7 +64,7 @@ async function signInUsers(userData) {
 // }
 
 module.exports = {
-    rgstUsers,
-    signInUsers,
-    findUserByEmail,
+  registerUsers,
+  signInUsers,
+  findUserByEmail,
 };
