@@ -8,11 +8,9 @@ const secretKey = process.env.JWT_SECRET_KEY;
          {Object} response
 */
 async function registerUsers(req, res) {
-  console.log(req.body);
   const { email, password, nickname } = req.body.user;
   try {
     const users = await Users.registerUsers({ email, password, nickname });
-    // res.json(users);
     res.status(200).json({
       user: {
         email: users.email,
@@ -21,8 +19,7 @@ async function registerUsers(req, res) {
       message: `註冊成功!`
     });
   } catch (err) {
-    console.error('Error fetching users:', err);
-    // res.status(500).json({ err, error: 'Error registering user' });
+    res.status(500).json({ err, error: '系統忙碌中' });
   }
 }
 
@@ -37,7 +34,7 @@ async function signInUsers(req, res) {
     const users = await Users.signInUsers({ email, password });
     //  users id和email產生jwt token
     if (!users) {
-      res.status(401).json({error:'Login error, please check your email and password'});
+      return res.status(401).json({ errors: [{ msg: '帳號或密碼錯誤，請確認' }] });
     }
     const token = jwt.sign(
       { id: users.id, email: users.email },
@@ -56,8 +53,7 @@ async function signInUsers(req, res) {
       message: `登入成功, ${users.nickname}!`
     });
   } catch (err) {
-    console.error('Error fetching users:', err);
-    res.status(500).json({err, error: 'Error fetching users' });
+    res.status(401).json({ errors: [{ msg: '系統忙碌中' }] });
   }
 }
 

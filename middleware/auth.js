@@ -11,7 +11,7 @@ const authenticate = [
   (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+      return res.status(401).json({ errors: errors.array() });
     }
     next();
   },
@@ -25,13 +25,13 @@ const authenticate = [
       // 驗證Bearer是否有效
       jwt.verify(token, `${secretKey}`, (err, user) => {
         if (err) {
-          return res.status(403).json({ errors: [{ msg: '未正確授權', param: 'token' }] });
+          return res.status(401).json({ errors: [{ msg: '未正確授權', param: 'token' }] });
         }
         req.user = user;
         next();
       });
     } else {
-      return res.status(403).json({ errors: [{ msg: '未正確授權', param: 'token' }] });
+      return res.status(401).json({ errors: [{ msg: '未正確授權', param: 'token' }] });
     }
   }
 ];

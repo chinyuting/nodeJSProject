@@ -1,5 +1,4 @@
 const { body, validationResult } = require('express-validator');
-const Todos = require('../models/TodosModel');
 
 const todoContentValidator = [
   body('content')

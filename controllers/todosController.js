@@ -12,8 +12,7 @@ async function getTodos(req, res) {
     const todos = await Todos.getTodos({ id });
     res.status(200).json(todos);
   } catch (err) {
-    console.error('Error fetching todos:', err);
-    res.status(500).json({ error: 'Error fetching todos' });
+    res.status(500).json({ error: '系統忙碌中' });
   }
 }
 
@@ -37,8 +36,7 @@ async function addTodo(req, res) {
       message: `新增成功`
     });
   } catch (err) {
-    console.error('Error fetching todos:', err);
-    res.status(500).json({ error: 'Error fetching todos' });
+    res.status(500).json({ error: '系統忙碌中' });
   }
 }
 
@@ -64,8 +62,7 @@ async function toggleTodoAsCompleted(req, res) {
     });
     
   } catch (err) {
-    console.error('Error fetching todos:', err);
-    res.status(500).json({ error: 'Error fetching todos' });
+    res.status(500).json({ error: '系統忙碌中' });
   }
 }
 
@@ -93,8 +90,7 @@ async function editTodoContent(req, res) {
       message: `修改成功`
     });
   } catch (err) {
-    console.error('Error fetching todos:', err);
-    res.status(500).json({ error: 'Error fetching todos' });
+    res.status(500).json({ error: '系統忙碌中' });
   }
 }
 
@@ -118,7 +114,7 @@ async function removeTodo(req, res) {
     });
   } catch (err) {
     console.error('Error fetching todos:', err);
-    res.status(500).json({ error: 'Error fetching todos' });
+    res.status(500).json({ error: '系統忙碌中' });
   }
 }
 

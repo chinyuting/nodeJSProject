@@ -54,15 +54,6 @@ async function signInUsers(userData) {
   }
 }
 
-// async function signOutUsers(userData) {
-//   const connection = await pool.connect();
-//   try {
-      
-//   } finally {
-//     connection.release();
-//   }
-// }
-
 module.exports = {
   registerUsers,
   signInUsers,
